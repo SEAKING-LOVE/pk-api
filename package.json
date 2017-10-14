@@ -4,7 +4,7 @@
   "description": "Pokemon API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/SEAKING-LOVE/pk-api/issues"
   },
-  "homepage": "https://github.com/SEAKING-LOVE/pk-api#readme"
+  "homepage": "https://github.com/SEAKING-LOVE/pk-api#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
 }
