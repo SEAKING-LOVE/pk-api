@@ -17,8 +17,6 @@ def create_schema():
 	ins = inspect(engine)
 	if 'pokedex' in ins.get_schema_names():
 		engine.execute('DROP SCHEMA ' + schema_name + ' CASCADE;')
-	# print(ins.get_schema_names())
-	# engine.execute('DROP SCHEMA ' + schema_name + ' CASCADE;')
 	engine.execute(CreateSchema(schema_name))
 	read_csvs(all_files)
 
