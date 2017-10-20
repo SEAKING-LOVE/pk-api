@@ -33,8 +33,10 @@ jobs:
       - deploy:
           name: Deploy to dokku
           command: |
-            git remote add dokku dokku@$server_ip:pk-api
-            git push dokku master
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              git remote add dokku dokku@$server_ip:pk-api.git
+              git push dokku master
+            fi
 
 workflows:
   version: 2
