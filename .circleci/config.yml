@@ -31,14 +31,12 @@ jobs:
       - image: circleci/node:8.7.0
     steps:
       - checkout
-      - run:
-          name: Fix host authenticity 
-          command: |
-            echo $server_ip >> ~/.ssh/known_hosts
+      - add-ssh-keys
       - deploy:
           name: Deploy to dokku
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              ssh-keyscan $server_ip >> ~/.ssh/known_hosts
               [[ ! -e "$(git rev-parse --git-dir)/shallow" ]] || git fetch --unshallow
               git remote add dokku dokku@$server_ip:pk-api
               git push dokku master
