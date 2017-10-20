@@ -32,8 +32,8 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-        fingerprints:
-          - "$host_fingerprint"
+          fingerprints:
+            - "$host_fingerprint"
       - deploy:
           name: Deploy to dokku
           command: |
