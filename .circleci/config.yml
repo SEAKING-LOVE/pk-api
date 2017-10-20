@@ -27,16 +27,17 @@ jobs:
 
   deployment:
     working_directory: ~/pk-api
-    machine: true
+    docker:
+      - image: circleci/node:8.7.0
     steps:
       - checkout
-      - add_ssh_keys
+      - add_ssh_keys:
+        fingerprints:
+          - "$host_fingerprint"
       - deploy:
           name: Deploy to dokku
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo "$server_ip $pub_key" >> ~/.ssh/known_hosts
-              cat ~/.ssh/known_hosts
               [[ ! -e "$(git rev-parse --git-dir)/shallow" ]] || git fetch --unshallow
               git remote add dokku dokku@$server_ip:pk-api
               git push dokku master
