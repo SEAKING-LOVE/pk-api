@@ -19,6 +19,9 @@ jobs:
           paths:
             - node_modules
   test:
+    working_directory: ~/pk-api
+    docker:
+      - image: circleci/node:8.7.0
     steps:
       - checkout
       - run:
@@ -26,6 +29,9 @@ jobs:
           command: echo "No tests for now"
 
   deployment:
+    working_directory: ~/pk-api
+    docker:
+      - image: circleci/node:8.7.0
     steps:
       - deploy:
           name: Deploy to dokku
