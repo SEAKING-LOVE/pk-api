@@ -31,14 +31,10 @@ jobs:
       - image: circleci/node:8.7.0
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "$host_fingerprint"
       - deploy:
           name: Deploy to dokku
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo $host_fingerprint
               [[ ! -e "$(git rev-parse --git-dir)/shallow" ]] || git fetch --unshallow
               git remote add dokku dokku@$server_ip:pk-api
               git push dokku master
@@ -51,18 +47,18 @@ workflows:
       - build:
           filters:
             branches:
-              only: master-fix-ci
+              only: master
       - test:
           requires:
             - build
           filters:
             branches:
-              only: master-fix-ci
+              only: master
       - deployment:
           requires:
             - build
             - test
           filters:
             branches:
-              only: master-fix-ci
+              only: master
 
