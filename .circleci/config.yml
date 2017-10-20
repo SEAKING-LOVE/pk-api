@@ -3,12 +3,12 @@ jobs:
   build:
     working_directory: ~/pk-api
     docker:
-      - image: circleci/node:8.7.0
+      - image: circleci/node:8.2.0
     steps:
       - checkout
       - run:
           name: Update npm
-          command: 'sudo npm install -g npm'
+          command: 'sudo npm install -g npm@latest'
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
