@@ -30,11 +30,10 @@ jobs:
     docker:
       - image: circleci/node:8.7.0
     steps:
+      - checkout
       - deploy:
           name: Deploy to dokku
           command: |
-            pwd
-            ls
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               [[ ! -e "$(git rev-parse --git-dir)/shallow" ]] || git fetch --unshallow
               git remote add dokku dokku@$server_ip:pk-api
