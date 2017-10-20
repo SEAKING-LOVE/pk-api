@@ -51,18 +51,18 @@ workflows:
       - build:
           filters:
             branches:
-              only: master
+              only: master-fix-ci
       - test:
           requires:
             - build
           filters:
             branches:
-              only: master
+              only: master-fix-ci
       - deployment:
           requires:
             - build
             - test
           filters:
             branches:
-              only: master
+              only: master-fix-ci
 
