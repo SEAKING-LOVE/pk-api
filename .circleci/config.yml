@@ -26,7 +26,6 @@ jobs:
           command: echo "No tests for now"
 
   deployment:
-    working_directory: ~/pk-api
     steps:
       - deploy:
           name: Deploy to dokku
