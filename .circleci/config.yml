@@ -22,7 +22,7 @@ jobs:
     steps:
       - checkout
       - run:
-      	  name: Run tests
+          name: Run tests
           command: echo "No tests for now"
 
   deployment:
