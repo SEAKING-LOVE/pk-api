@@ -49,7 +49,7 @@ workflows:
             branches:
               only: master
       - deployment:
-      	  requires:
+          requires:
             - build
             - test
           filters:
