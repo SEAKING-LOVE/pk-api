@@ -31,6 +31,9 @@ jobs:
       - image: circleci/node:8.7.0
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            $host_fingerprint
       - deploy:
           name: Deploy to dokku
           command: |
