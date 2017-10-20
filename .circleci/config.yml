@@ -37,6 +37,7 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo "$server_ip $pub_key" >> ~/.ssh/known_hosts
+              cat ~/.ssh/known_hosts
               [[ ! -e "$(git rev-parse --git-dir)/shallow" ]] || git fetch --unshallow
               git remote add dokku dokku@$server_ip:pk-api
               git push dokku master
