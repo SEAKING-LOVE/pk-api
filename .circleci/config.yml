@@ -34,7 +34,8 @@ jobs:
           name: Deploy to dokku
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              git remote add dokku dokku@$server_ip:pk-api.git
+              [[ ! -e "$(git rev-parse --git-dir)/shallow" ]] || git fetch --unshallow
+              git remote add dokku dokku@$server_ip:pk-api
               git push dokku master
             fi
 
