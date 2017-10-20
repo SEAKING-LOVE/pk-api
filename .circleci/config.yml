@@ -31,6 +31,7 @@ jobs:
       - image: circleci/node:8.7.0
     steps:
       - checkout
+      - add_ssh_keys
       - deploy:
           name: Deploy to dokku
           command: |
