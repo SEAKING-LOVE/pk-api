@@ -33,7 +33,7 @@ jobs:
       - checkout
       - add_ssh_keys
       - run:
-          name: Fix authenticity
+          name: Fix host authenticity
           command: |
             ssh-keyscan $server_ip >> ~/.ssh/known_hosts
       - deploy:
