@@ -31,7 +31,7 @@ jobs:
       - deploy:
           name: Deploy to dokku
           command: |
-          git remote add dokku dokku@$server_ip:pk-api
+          git remote add dokku dokku@$server_ip
           git push dokku master
 
 workflows:
