@@ -32,7 +32,7 @@ jobs:
           name: Deploy to dokku
           command: |
           [[ ! -e "$(git rev-parse --git-dir)/shallow" ]] || git fetch --unshallow
-          git remote add dokku dokku@$server_ip:pk-api
+          git remote add dokku dokku@${server_ip}:pk-api
           git push dokku master
 
 workflows:
