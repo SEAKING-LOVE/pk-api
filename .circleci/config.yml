@@ -31,9 +31,10 @@ jobs:
       - image: circleci/node:8.7.0
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "$host_fingerprint"
+      - run:
+          name: Fix host authenticity 
+          command: |
+            ssh-keyscan $host_fingerprint >> ~/.ssh/known_hosts
       - deploy:
           name: Deploy to dokku
           command: |
@@ -47,7 +48,10 @@ workflows:
   version: 2
   build_test_deploy:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only: master
       - test:
           requires:
             - build
