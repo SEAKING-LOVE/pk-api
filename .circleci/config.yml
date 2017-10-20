@@ -32,6 +32,10 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys
+      - run:
+          name: Fix authenticity
+          command: |
+            ssh-keyscan $server_ip >> ~/.ssh/known_hosts
       - deploy:
           name: Deploy to dokku
           command: |
