@@ -33,7 +33,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            $host_fingerprint
+            - $host_fingerprint
       - deploy:
           name: Deploy to dokku
           command: |
