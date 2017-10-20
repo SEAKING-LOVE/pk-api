@@ -34,7 +34,7 @@ jobs:
       - run:
           name: Fix host authenticity 
           command: |
-            $host_fingerprint >> ~/.ssh/known_hosts
+            echo $host_fingerprint >> ~/.ssh/known_hosts
       - deploy:
           name: Deploy to dokku
           command: |
