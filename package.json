@@ -4,7 +4,8 @@
   "description": "Pokemon API",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/app.js"
+    "start": "nodemon src/app.js",
+    "migration": "python db/migration.py"
   },
   "repository": {
     "type": "git",
