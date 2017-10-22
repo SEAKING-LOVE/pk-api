@@ -9,7 +9,7 @@ Make sure you have the following python modules installed:
 
 ```
 pip install pandas
-pip install os
+pip install psycopg2
 pip install sqlalchemy
 ```
 
@@ -19,6 +19,10 @@ Once you've satisfied the prerequisites, make sure `pkapi` is running. Run the f
 npm run migration
 ```
 
+To dump a copy of the database, run:
+```
+pg_dump pkapi --no-owner > initDB.sql
+```
 
 # API Docs
 ## /pokemon/

@@ -44,6 +44,21 @@ jobs:
               git remote add dokku dokku@$server_ip:pk-api
               git push dokku master
             fi
+  deploy_success:
+    working_directory: ~/pk-api
+    docker:
+      - image: circleci/node:8.7.0
+    steps:
+      - checkout
+      - add_ssh_keys:
+        fingerprints:
+          - "$github_deploy_fingerprint"
+    - deploy:
+          name: Update production branch
+          command: |
+          [[ ! -e "$(git rev-parse --git-dir)/shallow" ]] || git fetch --unshallow
+          git push origin production
+
 
 workflows:
   version: 2
@@ -63,6 +78,14 @@ workflows:
           requires:
             - build
             - test
+          filters:
+            branches:
+              only: master
+      - deploy_success:
+          requires:
+            - build
+            - test
+            - deployment
           filters:
             branches:
               only: master

@@ -1,5 +1,5 @@
 const { Client } = require('pg');
-const connectionString = process.env.DATABASE_URL || require('../config/local.json').pgconnection;
+const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/pkapi';
 const client = new Client({connectionString});
 
 client.connect();
