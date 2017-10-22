@@ -54,10 +54,10 @@ jobs:
           fingerprints:
             - "$github_write_fingerprint"
     - deploy:
-          name: Update production branch
-          command: |
-          [[ ! -e "$(git rev-parse --git-dir)/shallow" ]] || git fetch --unshallow
-          git push origin production
+        name: Update production branch
+        command: |
+        [[ ! -e "$(git rev-parse --git-dir)/shallow" ]] || git fetch --unshallow
+        git push origin production
 
 
 workflows:
