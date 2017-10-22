@@ -57,6 +57,7 @@ jobs:
           name: Update production branch
           command: |
             [[ ! -e "$(git rev-parse --git-dir)/shallow" ]] || git fetch --unshallow
+            git checkout -b production
             git remote add github git@github.com:SEAKING-LOVE/pk-api.git
             git push github production
 
