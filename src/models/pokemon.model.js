@@ -1,16 +1,19 @@
 const squel = require('squel');
-const client = require('../pgconnect.js');
-client.connect();
+const query = require('../pgconnect.js');
 
 const Model = {
 	all: () => {
-		const test = squel.select()
-			.from('pokedex.pokemon')
-			.field("name")
-			.where('id < 5')
+		const queryString = squel.select()
+			.from('pokemon.pokemon')
+			.field('id')
+			.field('identifier')
+			.field('height')
+			.field('weight')
+			.field('base_experience', 'baseExperience')
 			.toString();
-
-		console.log("TEST QUERY ", test);
+		return query(queryString)
+			.then((data) => { return data; })
+			.catch((err) => { return err; });
 	}
 };
 
