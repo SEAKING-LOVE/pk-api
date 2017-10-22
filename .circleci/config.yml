@@ -52,7 +52,7 @@ jobs:
       - checkout
       - add-ssh-keys:
           fingerprints:
-            - $github_write_fingerprint
+            - "$github_write_fingerprint"
     - deploy:
           name: Update production branch
           command: |
