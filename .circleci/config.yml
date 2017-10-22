@@ -50,7 +50,7 @@ jobs:
       - image: circleci/node:8.7.0
     steps:
       - checkout
-      - add-ssh-keys:
+      - add_ssh_keys:
           fingerprints:
             - "$github_write_fingerprint"
       - deploy:
