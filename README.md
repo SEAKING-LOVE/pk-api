@@ -18,3 +18,19 @@ Once you've satisfied the prerequisites, make sure `pkapi` is running. Run the f
 ```
 npm run migration
 ```
+
+
+# API Docs
+## /pokemon/
+```
+[
+	{
+		id: "1",
+		identifier: "bulbasaur",
+		height: "7",
+		weight: "69",
+		baseExperience: "64"
+	},
+	...
+]
+```
