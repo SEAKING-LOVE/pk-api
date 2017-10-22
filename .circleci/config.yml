@@ -51,8 +51,8 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-        fingerprints:
-          - "$github_deploy_fingerprint"
+          fingerprints:
+            - "$github_write_fingerprint"
     - deploy:
           name: Update production branch
           command: |
