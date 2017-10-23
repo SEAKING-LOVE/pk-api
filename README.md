@@ -1,5 +1,5 @@
 # pk-api
-Pokemon API
+Welcome to Pokemon API
 
 # Setting up the database
 
