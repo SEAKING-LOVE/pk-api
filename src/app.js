@@ -9,10 +9,12 @@ const PokemonRouter = require('./routes/pokemon.router.js');
 const EvolutionsRouter = require('./routes/evolutions.router.js');
 const TypesRouter = require('./routes/types.router.js');
 const AbilitiesRouter = require('./routes/abilities.router.js');
+const MovesRouter = require('./routes/moves.router.js');
 
 app.use(`${API_PATH}pokemon`, PokemonRouter);
 app.use(`${API_PATH}evolutions`, EvolutionsRouter);
 app.use(`${API_PATH}types`, TypesRouter);
 app.use(`${API_PATH}abilities`, AbilitiesRouter);
+app.use(`${API_PATH}moves`, MovesRouter);
 
 app.listen(PORT, () => console.log('Listening on port ', PORT));
