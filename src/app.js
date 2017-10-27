@@ -4,7 +4,7 @@ const app = express();
 
 app.get('/', (req, res) => res.send('api root'));
 
-const API_PATH = '/api/v1/';
+const API_PATH = '/v1/';
 const PokemonRouter = require('./routes/pokemon.router.js');
 const EvolutionsRouter = require('./routes/evolutions.router.js');
 const TypesRouter = require('./routes/types.router.js');
