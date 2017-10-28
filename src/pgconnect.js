@@ -8,6 +8,7 @@ const query = (queryString) => {
 	return new Promise((resolve, reject) => {
 		client.query(`${queryString};`)
 		.then((data) => {
+			if(data.rows.length == 1) resolve(data.rows[0]);
 			resolve(data.rows);
 		})
 		.catch((err) => {

@@ -26,6 +26,7 @@ const Model = {
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
 	},
+	// https://github.com/SEAKING-LOVE/pk-api/blob/master/data/move_damage_classes.csv
 	id: (id) => { //add distinct
 		const queryString = squel.select()
 			.from(tables.moves)
@@ -41,7 +42,6 @@ const Model = {
 			.where(`${tables.moves}.id = ${id}`)
 			.where(`${tables.movesDesc}.language_id = 9`)
 			.toString();
-		console.log(queryString);
 		return query(queryString)
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
