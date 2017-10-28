@@ -3,12 +3,11 @@ const query = require('../pgconnect.js');
 
 const tables = {
 	moves: 'pokemon.moves',
-	moveCategory: 'pokemon.move_battle_styles',
-	moveDetails: 'pokemon.move_meta',
-	moveDesc: 'pokemon.move_flavor_text',
+	movesCategory: 'pokemon.move_battle_styles',
+	movesDetails: 'pokemon.move_meta',
+	movesDesc: 'pokemon.move_flavor_text',
 	types: 'pokemon.types',
 };
-
 
 const Model = {
 	all: () => {
@@ -27,8 +26,25 @@ const Model = {
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
 	},
-	id: (id) => {
-
+	id: (id) => { //add distinct
+		const queryString = squel.select()
+			.from(tables.moves)
+			.field(`${tables.moves}.id`)
+			.field(`${tables.moves}.identifier`)
+			.field(`${tables.moves}.power`)
+			.field(`${tables.moves}.pp`)
+			.field(`${tables.moves}.accuracy`)
+			.field(`${tables.movesDesc}.flavor_text`)
+			.field(`${tables.types}.identifier`, 'type')
+			.join(tables.types, null, `${tables.types}.id = ${tables.moves}.type_id`)
+			.join(tables.movesDesc, null, `${tables.movesDesc}.move_id = ${tables.moves}.id`)
+			.where(`${tables.moves}.id = ${id}`)
+			.where(`${tables.movesDesc}.language_id = 9`)
+			.toString();
+		console.log(queryString);
+		return query(queryString)
+			.then((data) => { return data; })
+			.catch((err) => { return err; });
 	}
 }
 
