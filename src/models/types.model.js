@@ -20,7 +20,15 @@ const Model = {
 			.catch((err) => { return err; });
 	},
 	id: (id) => {
-
+		const queryString = squel.select()
+			.from(tables.types)
+			.field(`${tables.types}.id`)
+			.field(`${tables.types}.identifier`)
+			.where(`${tables.types}.id = ${id}`)
+			.toString();
+		return query(queryString)
+			.then((data) => { return data; })
+			.catch((err) => { return err; });
 	},
 	effectivenessAll: () => {
 
