@@ -15,7 +15,13 @@ const Controller = {
 		Pokemon.typeId(req.params.id)
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));
-	}
+	},
+	abilityId: (req, res) => {
+		Pokemon.abilityId(req.params.id)
+		.then((data) => res.send(data))
+		.catch((err) => res.send(err));
+	},
+
 };
 
 module.exports = Controller;
