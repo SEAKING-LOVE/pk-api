@@ -5,6 +5,16 @@ const Controller = {
 		Pokemon.all()
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));
+	},
+	id: (req, res) => {
+		Pokemon.id(req.params.id)
+		.then((data) => res.send(data))
+		.catch((err) => res.send(err));
+	},
+	typeId: (req, res) => {
+		Pokemon.typeId(req.params.id)
+		.then((data) => res.send(data))
+		.catch((err) => res.send(err));
 	}
 };
 
