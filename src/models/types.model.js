@@ -31,7 +31,17 @@ const Model = {
 			.catch((err) => { return err; });
 	},
 	effectivenessAll: () => {
-
+		const queryString = squel.select()
+			.from(tables.types)
+			.field(`${tables.types}.id`)
+			.field(`${tables.types}.identifier`)
+			.field(`${tables.effectiveness}.damage_factor`, 'effect')
+			.join(tables.effectiveness, null, `${tables.types}.id = ${tables.effectiveness}.damage_type_id`)
+			.toString();
+		console.log(queryString);
+		return query(queryString)
+			.then((data) => { return data; })
+			.catch((err) => { return err; });
 	},
 	effectivenessId: (id) => {
 
