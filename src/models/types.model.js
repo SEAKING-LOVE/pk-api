@@ -30,12 +30,15 @@ const Model = {
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
 	},
-	effectivenessAll: () => {
+	effectAll: () => {
 		const queryString = squel.select()
 			.from(tables.types)
-			.field(`${tables.types}.id`)
-			.field(`${tables.types}.identifier`)
-			.field(`${tables.effectiveness}.damage_factor`, 'effect')
+			.field(`${tables.types}.id`, 'damageId')
+			.field(`${tables.types}.identifier`, 'damageType')
+			.field(`${tables.effectiveness}.target_type_id`, 'targetId')
+			.field(`${tables.effectiveness}.damage_factor`, 'damageFactor')
+			// also query damage type name
+			.field(`${tables.types}.id`, 'damageId')
 			.join(tables.effectiveness, null, `${tables.types}.id = ${tables.effectiveness}.damage_type_id`)
 			.toString();
 		console.log(queryString);
@@ -43,20 +46,51 @@ const Model = {
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
 	},
-	effectivenessId: (id) => {
-
-	},
 	pokemon: (id) => {
 		const queryString = squel.select()
 			.from(tables.pkTypes)
 			.field(`${tables.pkTypes}.pokemon_id`, 'pokemonId')
 			.field(`${tables.pkTypes}.type_id`, 'typeId')
-			.field(`${tables.pk}.identifier`, 'pokemonName')
-			.field(`${tables.types}.identifier`, 'typeName')
+			.field(`${tables.pk}.identifier`, 'pokemon')
+			.field(`${tables.types}.identifier`, 'type')
 			.join(tables.pk, null, `${tables.pk}.id = ${tables.pkTypes}.pokemon_id`)
 			.join(tables.types, null, `${tables.types}.id = ${tables.pkTypes}.type_id`)
 			.where(`${tables.pkTypes}.type_id = ${id}`)
 			.toString();
+		return query(queryString)
+			.then((data) => { return data; })
+			.catch((err) => { return err; });
+	},
+	effectDamageId: (id) => {
+		const queryString = squel.select()
+			.from(tables.types)
+			.field(`${tables.types}.id`, 'damageId')
+			.field(`${tables.types}.identifier`, 'damageType')
+			.field(`${tables.effectiveness}.target_type_id`, 'targetId')
+			.field(`${tables.effectiveness}.damage_factor`, 'damageFactor')
+			// also query damage type name
+			.field(`${tables.types}.id`, 'damageId')
+			.join(tables.effectiveness, null, `${tables.types}.id = ${tables.effectiveness}.damage_type_id`)
+			.where(`${tables.effectiveness}.damage_type_id = ${id}`)
+			.toString();
+		console.log(queryString);
+		return query(queryString)
+			.then((data) => { return data; })
+			.catch((err) => { return err; });
+	},
+	effectTargetId: (id) => {
+		const queryString = squel.select()
+			.from(tables.types)
+			.field(`${tables.types}.id`, 'damageId')
+			.field(`${tables.types}.identifier`, 'damageType')
+			.field(`${tables.effectiveness}.target_type_id`, 'targetId')
+			.field(`${tables.effectiveness}.damage_factor`, 'damageFactor')
+			// also query damage type name
+			.field(`${tables.types}.id`, 'damageId')
+			.join(tables.effectiveness, null, `${tables.types}.id = ${tables.effectiveness}.damage_type_id`)
+			.where(`${tables.effectiveness}.target_type_id = ${id}`)
+			.toString();
+		console.log(queryString);
 		return query(queryString)
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
