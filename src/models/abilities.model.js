@@ -1,4 +1,4 @@
-const squel = require('squel');
+const squel = require('squel').useFlavour('postgres');
 const query = require('../pgconnect.js');
 
 const tables = {
@@ -18,37 +18,48 @@ const Model = {
 				.where(`${tables.abilitiesDesc}.language_id = 9`)
 				.group(`${tables.abilitiesDesc}.language_id`)
 				.group(`${tables.abilitiesDesc}.ability_id`)
-				// .toString();
+				//.toString();
 
 		const queryString = squel.select()
 			.from(tables.abilities)
 			.field(`${tables.abilities}.id`)
 			.field(`${tables.abilities}.identifier`)
-			.field(`${tables.abilitiesDesc}.flavor_text`)
+			//.field(`${tables.abilitiesDesc}.flavor_text`)
 			
 			// .join(tables.abilitiesDesc, null, `${tables.abilities}.id = ${tables.abilitiesDesc}.ability_id`)
-			.join(subQuery, null, `${tables.abilities}.id = ${tables.abilitiesDesc}.ability_id`)
-			.where(`${tables.abilitiesDesc}.language_id = 9`)
+			.join(subQuery, "subQuery", `${tables.abilities}.id = subQuery.ability_id`)
+			//.where(`${tables.abilitiesDesc}.language_id = 9`)
 			.order(`${tables.abilities}.identifier`)
-			.toString();
-		console.log(queryString);
+			// .toString();
+		// console.log(queryString.toString());
 		return query(queryString)
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
 	},
 	id: (id) => {
+		const subQuery = squel.select()
+				.distinct(`${tables.abilitiesDesc}.ability_id`)
+				.from(tables.abilitiesDesc)
+				.field(`${tables.abilitiesDesc}.ability_id`)
+				.field(`${tables.abilitiesDesc}.language_id`)
+				.field(`${tables.abilitiesDesc}.flavor_text`)
+				.field(`MAX(${tables.abilitiesDesc}.version_group_id)`)
+				.where(`${tables.abilitiesDesc}.language_id = 9`)
+				.group(`${tables.abilitiesDesc}.language_id`)
+				.group(`${tables.abilitiesDesc}.ability_id`)
+				.group(`${tables.abilitiesDesc}.flavor_text`)
+
 		const queryString = squel.select()
-			.distinct(`${tables.abilitiesDesc}.flavor_text`)
 			.from(tables.abilities)
 			.field(`${tables.abilities}.id`)
 			.field(`${tables.abilities}.identifier`)
-			.field(`${tables.abilitiesDesc}.flavor_text`)
-			.distinct() 	// figure out how to get distinc to work :S
-			.join(tables.abilitiesDesc, null, `${tables.abilities}.id = ${tables.abilitiesDesc}.ability_id`)
-			.where(`${tables.abilitiesDesc}.language_id = 9`)
+			.field(`subQuery.flavor_text`)
+			.join(subQuery, "subQuery", `${tables.abilities}.id = subQuery.ability_id`)
+			//.where(`${tables.abilitiesDesc}.language_id = 9`)
 			.where(`${tables.abilities}.id = ${id}`)
-			.order(`${tables.abilities}.identifier`)
-			.toString();
+			//.order(`${tables.abilities}.identifier`)
+			//.toString();
+		console.log(subQuery.toString());
 		return query(queryString)
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
