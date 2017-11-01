@@ -21,6 +21,11 @@ const Controller = {
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));
 	},
+	moveId: (req, res) => {
+		Pokemon.moveId(req.params.id)
+		.then((data) => res.send(data))
+		.catch((err) => res.send(err));	
+	}
 
 };
 
