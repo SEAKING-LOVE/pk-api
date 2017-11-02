@@ -3,8 +3,10 @@ const query = require('../pgconnect.js');
 
 const tables = {
 	abilities: 'pokemon.abilities',
-	abilitiesDesc: 'pokemon.ability_flavor_text'
-}
+	abilitiesDesc: 'pokemon.ability_flavor_text',
+	pkAbilities: 'pokemon.pokemon_abilities',
+};
+
 const Model = {
 	all: () => {
 		const subQuery = squel.select()
@@ -27,7 +29,7 @@ const Model = {
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
 	},
-	id: (id) => {
+	description: (id) => {
 		const subQuery = squel.select()
 				.distinct(`${tables.abilitiesDesc}.ability_id`)
 				.from(tables.abilitiesDesc)
@@ -52,6 +54,20 @@ const Model = {
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
 
+	},
+	pokemon: (id) => {
+		const queryString = squel.select()
+			.from(tables.pkAbilities)
+			.field(`${tables.pkAbilities}.pokemon_id`)
+			.field(`${tables.pkAbilities}.is_hidden`)
+			.field(`${tables.abilities}.identifier`)
+			.join(tables.abilities, null, `${tables.pkAbilities}.ability_id = ${tables.abilities}.id`)
+			.where(`${tables.pkAbilities}.ability_id = ${id}`)
+			.toString();
+
+		return query(queryString)
+			.then((data) => { return data; })
+			.catch((err) => { return err; });
 	}
 }
 
