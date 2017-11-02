@@ -7,6 +7,7 @@ const tables = {
 	movesDetails: 'pokemon.move_meta',
 	movesDesc: 'pokemon.move_flavor_text',
 	types: 'pokemon.types',
+	pkMoves: 'pokemon.pokemon_moves',
 };
 
 const Model = {
@@ -27,7 +28,7 @@ const Model = {
 			.catch((err) => { return err; });
 	},
 	// https://github.com/SEAKING-LOVE/pk-api/blob/master/data/move_damage_classes.csv
-	id: (id) => { //add distinct
+	description: (id) => { //add distinct
 		const queryString = squel.select()
 			.from(tables.moves)
 			.field(`${tables.moves}.id`)
@@ -42,6 +43,21 @@ const Model = {
 			.where(`${tables.moves}.id = ${id}`)
 			.where(`${tables.movesDesc}.language_id = 9`)
 			.toString();
+		return query(queryString)
+			.then((data) => { return data; })
+			.catch((err) => { return err; });
+	},
+	pokemon: (id) => {
+		const queryString = squel.select()
+			.from(tables.pkMoves)
+			.field(`${tables.pkMoves}.pokemon_id`)
+			.field(`${tables.pkMoves}.move_id`)
+			.field(`${tables.pkMoves}.pokemon_move_method_id`)
+			.field(`${tables.pkMoves}.level`)
+			.field(`${tables.moves}.identifier`)
+			.join(tables.moves, null, `${tables.pkMoves}.move_id = ${tables.moves}.id`)
+			.where(`${tables.pkMoves}.move_id = ${id}`)
+
 		return query(queryString)
 			.then((data) => { return data; })
 			.catch((err) => { return err; });

@@ -20,6 +20,11 @@ const Controller = {
 		Types.effectivenessId(req.params.id)
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));
+	},
+	pokemon: (req, res) => {
+		Types.pokemon(req.params.id)
+		.then((data) => res.send(data))
+		.catch((err) => res.send(err));
 	}
 };
 
