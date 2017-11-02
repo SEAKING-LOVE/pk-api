@@ -56,6 +56,12 @@ const Model = {
 	},
 	abilityId: (id) => {
 		const queryString = squel.select()
+			.from(tables.pkAbilities)
+			.field(`${tables.pkAbilities}.pokemon_id`)
+			.field(`${tables.pkAbilities}.is_hidden`)
+			.field(`${tables.abilities}.identifier`)
+			.join(tables.abilities, null, `${tables.pkAbilities}.ability_id = ${tables.abilities}.id`)
+			.where(`${tables.pkAbilities}.pokemon_id = ${id}`)
 			.toString();
 		return query(queryString)
 			.then((data) => { return data; })
