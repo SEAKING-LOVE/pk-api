@@ -71,8 +71,7 @@ const Model = {
 			.field(`${tables.moves}.identifier`)
 			.join(tables.moves, null, `${tables.pkMoves}.move_id = ${tables.moves}.id`)
 			.where(`${tables.pkMoves}.move_id = ${id}`)
-			.toString();
-			console.log(queryString)
+
 		return query(queryString)
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
