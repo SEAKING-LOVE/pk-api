@@ -6,23 +6,23 @@ const Controller = {
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));
 	},
-	id: (req, res) => {
-		Pokemon.id(req.params.id)
+	general: (req, res) => {
+		Pokemon.general(req.params.id)
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));
 	},
-	typeId: (req, res) => {
-		Pokemon.typeId(req.params.id)
+	type: (req, res) => {
+		Pokemon.type(req.params.id)
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));
 	},
-	abilityId: (req, res) => {
-		Pokemon.abilityId(req.params.id)
+	ability: (req, res) => {
+		Pokemon.ability(req.params.id)
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));
 	},
-	moveId: (req, res) => {
-		Pokemon.moveId(req.params.id)
+	move: (req, res) => {
+		Pokemon.move(req.params.id)
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));	
 	}
