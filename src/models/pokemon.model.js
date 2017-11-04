@@ -79,7 +79,6 @@ const Model = {
 			.from(tables.pkMoves)
 			.field(`${tables.pkMoves}.move_id`, 'id')
 			.field(`${tables.pkMoves}.level`)
-			.field(`${tables.pkMoves}.pokemon_move_method_id`)
 			.field(`${tables.moves}.identifier`)
 			.field(`${tables.moveMethods}.identifier`, 'method')
 			.join(tables.moves, null, `${tables.pkMoves}.move_id = ${tables.moves}.id`)
@@ -88,7 +87,16 @@ const Model = {
 			.toString()
 
 		return query(queryString)
-			.then((data) => { return data; })
+			.then((data) => {
+				let catagorized = {};
+				data.forEach((moves) => {
+					const method = moves.method;
+					const { id, level, identifier } = moves;
+					if(!catagorized[method]) catagorized[method] = [];
+					catagorized[method].push({ id, level, identifier });
+				});
+				return catagorized;
+			})
 			.catch((err) => { return err; });
 	}
 };
