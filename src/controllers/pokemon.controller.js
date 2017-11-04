@@ -11,21 +11,26 @@ const Controller = {
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));
 	},
-	type: (req, res) => {
-		Pokemon.type(req.params.id)
+	types: (req, res) => {
+		Pokemon.types(req.params.id)
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));
 	},
-	ability: (req, res) => {
-		Pokemon.ability(req.params.id)
+	abilities: (req, res) => {
+		Pokemon.abilities(req.params.id)
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));
 	},
-	move: (req, res) => {
-		Pokemon.move(req.params.id)
+	moves: (req, res) => {
+		Pokemon.moves(req.params.id)
 		.then((data) => res.send(data))
 		.catch((err) => res.send(err));	
-	}
+	},
+	stats: (req, res) => {
+		Pokemon.stats(req.params.id)
+		.then((data) => res.send(data))
+		.catch((err) => res.send(err));	
+	},
 
 };
 
