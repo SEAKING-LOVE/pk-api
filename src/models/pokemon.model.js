@@ -8,7 +8,8 @@ const tables = {
 	pkAbilities: 'pokemon.pokemon_abilities',
 	abilities: 'pokemon.abilities',
 	pkMoves: 'pokemon.pokemon_moves',
-	moves: 'pokemon.moves'
+	moves: 'pokemon.moves',
+	moveMethods: 'pokemon.pokemon_move_methods',
 };
 
 const Model = {
@@ -74,7 +75,21 @@ const Model = {
 			.catch((err) => { return err; });	
 	},
 	move: (id) => {
+		const queryString = squel.select()
+			.from(tables.pkMoves)
+			.field(`${tables.pkMoves}.move_id`, 'id')
+			.field(`${tables.pkMoves}.level`)
+			.field(`${tables.pkMoves}.pokemon_move_method_id`)
+			.field(`${tables.moves}.identifier`)
+			.field(`${tables.moveMethods}.identifier`, 'method')
+			.join(tables.moves, null, `${tables.pkMoves}.move_id = ${tables.moves}.id`)
+			.join(tables.moveMethods, null, `${tables.pkMoves}.pokemon_move_method_id = ${tables.moveMethods}.id`)
+			.where(`${tables.pkMoves}.pokemon_id = ${id}`)
+			.toString()
 
+		return query(queryString)
+			.then((data) => { return data; })
+			.catch((err) => { return err; });
 	}
 };
 
