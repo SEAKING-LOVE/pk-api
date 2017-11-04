@@ -52,7 +52,26 @@ const Model = {
 			.catch((err) => { return err; });
 	},
 	ability: (id) => {
-		
+		const queryString = squel.select()
+			.from(tables.pkAbilities)
+			.field(`${tables.pkAbilities}.ability_id`, 'id')
+			.field(`${tables.pkAbilities}.is_hidden`, 'hidden')
+			.field(`${tables.abilities}.identifier`)
+			.join(tables.abilities, null, `${tables.pkAbilities}.ability_id = ${tables.abilities}.id`)
+			.where(`${tables.pkAbilities}.pokemon_id = ${id}`)
+			.toString();
+		return query(queryString)
+			.then((data) => { 
+				return data.map((ability) => {
+					const { id, hidden, identifier } = ability;
+					return {
+						id,
+						identifier,
+						hidden: hidden == 1
+					}
+				})
+			})
+			.catch((err) => { return err; });	
 	},
 	move: (id) => {
 
