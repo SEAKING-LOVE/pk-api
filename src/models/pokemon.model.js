@@ -10,6 +10,8 @@ const tables = {
 	pkMoves: 'pokemon.pokemon_moves',
 	moves: 'pokemon.moves',
 	moveMethods: 'pokemon.pokemon_move_methods',
+	pkStats: 'pokemon.pokemon_stats',
+	stats: 'pokemon.stats'
 };
 
 const Model = {
@@ -40,7 +42,7 @@ const Model = {
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
 	},
-	type: (id) => {
+	types: (id) => {
 		const queryString = squel.select()
 			.from(tables.pkTypes)
 			.field(`${tables.pkTypes}.type_id`, 'id')
@@ -52,7 +54,7 @@ const Model = {
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
 	},
-	ability: (id) => {
+	abilities: (id) => {
 		const queryString = squel.select()
 			.from(tables.pkAbilities)
 			.field(`${tables.pkAbilities}.ability_id`, 'id')
@@ -74,7 +76,7 @@ const Model = {
 			})
 			.catch((err) => { return err; });	
 	},
-	move: (id) => {
+	moves: (id) => {
 		const queryString = squel.select()
 			.from(tables.pkMoves)
 			.field(`${tables.pkMoves}.move_id`, 'id')
@@ -96,6 +98,24 @@ const Model = {
 					catagorized[method].push({ id, level, identifier });
 				});
 				return catagorized;
+			})
+			.catch((err) => { return err; });
+	},
+	stats: (id) => {
+		const queryString = squel.select()
+			.from(tables.pkStats)
+			.field(`${tables.pkStats}.base_stat`, 'value')
+			.field(`${tables.stats}.identifier`, 'identifier')
+			.join(tables.stats, null, `${tables.pkStats}.stat_id = ${tables.stats}.id`)
+			.where(`${tables.pkStats}.pokemon_id = ${id}`)
+			.toString();
+		return query(queryString)
+			.then((data) => {
+				let stats = {};
+				data.forEach((stat) => {
+					stats[stat.identifier] = stat.value;
+				})
+				return stats;
 			})
 			.catch((err) => { return err; });
 	}
