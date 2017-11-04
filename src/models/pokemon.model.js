@@ -40,7 +40,16 @@ const Model = {
 			.catch((err) => { return err; });
 	},
 	type: (id) => {
-	
+		const queryString = squel.select()
+			.from(tables.pkTypes)
+			.field(`${tables.pkTypes}.type_id`, 'id')
+			.field(`${tables.types}.identifier`)
+			.join(tables.types, null, `${tables.pkTypes}.type_id = ${tables.types}.id`)
+			.where(`${tables.pkTypes}.pokemon_id = ${id}`)
+			.toString();
+		return query(queryString)
+			.then((data) => { return data; })
+			.catch((err) => { return err; });
 	},
 	ability: (id) => {
 		
