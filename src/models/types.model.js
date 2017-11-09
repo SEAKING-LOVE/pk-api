@@ -1,4 +1,4 @@
-const squel = require('squel');
+const squel = require('squel').useFlavour('postgres');
 const query = require('../pgconnect.js');
 
 const tables = {
@@ -31,15 +31,28 @@ const Model = {
 			.catch((err) => { return err; });
 	},
 	effectAll: () => {
+		const effectivenessSubquery = squel.select()
+			.from(tables.effectiveness)
+			.field(`${tables.effectiveness}.damage_type_id`)
+			.field(`${tables.effectiveness}.target_type_id`)
+			.field(`${tables.effectiveness}.damage_factor`)
+
+		const typeNameRejoin = squel.select()
+			.from(tables.types, 'typeRejoin')
+			.field(`typeRejoin.id`)
+			.field(`typeRejoin.identifier`)
+
 		const queryString = squel.select()
-			.from(tables.types)
-			.field(`${tables.types}.id`, 'damageId')
-			.field(`${tables.types}.identifier`, 'damageType')
-			.field(`${tables.effectiveness}.target_type_id`, 'targetId')
-			.field(`${tables.effectiveness}.damage_factor`, 'damageFactor')
+			.from(tables.types, 'types')
+			.field(`types.id`, 'damageId')
+			.field(`types.identifier`, 'damageType')
+			.field(`effectiveness.target_type_id`, 'targetId')
+			.field(`typeNameRejoin.identifier`, 'targetType')
+			.field(`effectiveness.damage_factor`, 'damageFactor')
 			// also query damage type name
-			.field(`${tables.types}.id`, 'damageId')
-			.join(tables.effectiveness, null, `${tables.types}.id = ${tables.effectiveness}.damage_type_id`)
+			.join(effectivenessSubquery, "effectiveness", `types.id = effectiveness.damage_type_id`)
+			// Target Type Name
+			.join(typeNameRejoin, "typeNameRejoin", `effectiveness.target_type_id = typeNameRejoin.id`)
 			.toString();
 		console.log(queryString);
 		return query(queryString)
@@ -62,16 +75,29 @@ const Model = {
 			.catch((err) => { return err; });
 	},
 	effectDamageId: (id) => {
+		const effectivenessSubquery = squel.select()
+			.from(tables.effectiveness)
+			.field(`${tables.effectiveness}.damage_type_id`)
+			.field(`${tables.effectiveness}.target_type_id`)
+			.field(`${tables.effectiveness}.damage_factor`)
+
+		const typeNameRejoin = squel.select()
+			.from(tables.types, 'typeRejoin')
+			.field(`typeRejoin.id`)
+			.field(`typeRejoin.identifier`)
+
 		const queryString = squel.select()
-			.from(tables.types)
-			.field(`${tables.types}.id`, 'damageId')
-			.field(`${tables.types}.identifier`, 'damageType')
-			.field(`${tables.effectiveness}.target_type_id`, 'targetId')
-			.field(`${tables.effectiveness}.damage_factor`, 'damageFactor')
+			.from(tables.types, 'types')
+			.field(`types.id`, 'damageId')
+			.field(`types.identifier`, 'damageType')
+			.field(`effectiveness.target_type_id`, 'targetId')
+			.field(`typeNameRejoin.identifier`, 'targetType')
+			.field(`effectiveness.damage_factor`, 'damageFactor')
 			// also query damage type name
-			.field(`${tables.types}.id`, 'damageId')
-			.join(tables.effectiveness, null, `${tables.types}.id = ${tables.effectiveness}.damage_type_id`)
-			.where(`${tables.effectiveness}.damage_type_id = ${id}`)
+			.join(effectivenessSubquery, "effectiveness", `types.id = effectiveness.damage_type_id`)
+			// Target Type Name
+			.join(typeNameRejoin, "typeNameRejoin", `effectiveness.target_type_id = typeNameRejoin.id`)
+			.where(`effectiveness.damage_type_id = ${id}`)
 			.toString();
 		console.log(queryString);
 		return query(queryString)
@@ -79,16 +105,29 @@ const Model = {
 			.catch((err) => { return err; });
 	},
 	effectTargetId: (id) => {
+		const effectivenessSubquery = squel.select()
+			.from(tables.effectiveness)
+			.field(`${tables.effectiveness}.damage_type_id`)
+			.field(`${tables.effectiveness}.target_type_id`)
+			.field(`${tables.effectiveness}.damage_factor`)
+
+		const typeNameRejoin = squel.select()
+			.from(tables.types, 'typeRejoin')
+			.field(`typeRejoin.id`)
+			.field(`typeRejoin.identifier`)
+
 		const queryString = squel.select()
-			.from(tables.types)
-			.field(`${tables.types}.id`, 'damageId')
-			.field(`${tables.types}.identifier`, 'damageType')
-			.field(`${tables.effectiveness}.target_type_id`, 'targetId')
-			.field(`${tables.effectiveness}.damage_factor`, 'damageFactor')
+			.from(tables.types, 'types')
+			.field(`types.id`, 'damageId')
+			.field(`types.identifier`, 'damageType')
+			.field(`effectiveness.target_type_id`, 'targetId')
+			.field(`typeNameRejoin.identifier`, 'targetType')
+			.field(`effectiveness.damage_factor`, 'damageFactor')
 			// also query damage type name
-			.field(`${tables.types}.id`, 'damageId')
-			.join(tables.effectiveness, null, `${tables.types}.id = ${tables.effectiveness}.damage_type_id`)
-			.where(`${tables.effectiveness}.target_type_id = ${id}`)
+			.join(effectivenessSubquery, "effectiveness", `types.id = effectiveness.damage_type_id`)
+			// Target Type Name
+			.join(typeNameRejoin, "typeNameRejoin", `effectiveness.target_type_id = typeNameRejoin.id`)
+			.where(`effectiveness.target_type_id = ${id}`)
 			.toString();
 		console.log(queryString);
 		return query(queryString)
