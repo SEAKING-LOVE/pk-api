@@ -49,9 +49,7 @@ const Model = {
 			.field(`effectiveness.target_type_id`, 'targetId')
 			.field(`typeNameRejoin.identifier`, 'targetType')
 			.field(`effectiveness.damage_factor`, 'damageFactor')
-			// also query damage type name
 			.join(effectivenessSubquery, "effectiveness", `types.id = effectiveness.damage_type_id`)
-			// Target Type Name
 			.join(typeNameRejoin, "typeNameRejoin", `effectiveness.target_type_id = typeNameRejoin.id`)
 			.toString();
 		console.log(queryString);
@@ -93,13 +91,10 @@ const Model = {
 			.field(`effectiveness.target_type_id`, 'targetId')
 			.field(`typeNameRejoin.identifier`, 'targetType')
 			.field(`effectiveness.damage_factor`, 'damageFactor')
-			// also query damage type name
 			.join(effectivenessSubquery, "effectiveness", `types.id = effectiveness.damage_type_id`)
-			// Target Type Name
 			.join(typeNameRejoin, "typeNameRejoin", `effectiveness.target_type_id = typeNameRejoin.id`)
 			.where(`effectiveness.damage_type_id = ${id}`)
 			.toString();
-		console.log(queryString);
 		return query(queryString)
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
@@ -123,13 +118,10 @@ const Model = {
 			.field(`effectiveness.target_type_id`, 'targetId')
 			.field(`typeNameRejoin.identifier`, 'targetType')
 			.field(`effectiveness.damage_factor`, 'damageFactor')
-			// also query damage type name
 			.join(effectivenessSubquery, "effectiveness", `types.id = effectiveness.damage_type_id`)
-			// Target Type Name
 			.join(typeNameRejoin, "typeNameRejoin", `effectiveness.target_type_id = typeNameRejoin.id`)
 			.where(`effectiveness.target_type_id = ${id}`)
 			.toString();
-		console.log(queryString);
 		return query(queryString)
 			.then((data) => { return data; })
 			.catch((err) => { return err; });
