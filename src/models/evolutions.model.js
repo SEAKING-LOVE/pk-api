@@ -10,12 +10,7 @@ const tables = {
 
 
 const Model = {
-	id: (id) => {
-		// group by evolution_chain_id and return id of pokemon where
-		// evolves_from_species_id = NULL because that should be the baby form
-		// https://github.com/SEAKING-LOVE/pk-api/blob/master/data/pokemon_species.csv
-		// DOCS: http://veekun.github.io/pokedex/main-tables.html#dex-table-pokemonspecies
-		
+	id: (id) => {		
 		const evoChainQuery = squel.select()
 			.from(tables.species)
 			.field(`${tables.species}.evolution_chain_id`)
@@ -24,15 +19,32 @@ const Model = {
 		const pokemonSpeciesQuery = (evoChain) => {
 			return squel.select()
 			.from(tables.species)
+			.field('id')
+			.field('identifier')
+			.field('evolves_from_species_id', 'predecessorId')
+			.field('evolution_chain_id', 'chainId')
+			.field('is_baby', 'isBaby')
+			.field('forms_switchable', 'formsSwitchable')
 			.where(`${tables.species}.evolution_chain_id = ${evoChain}`)
-
 		} 
-
 		return query(evoChainQuery)
 			.then((targetSpecies) => {
 				return query(pokemonSpeciesQuery(targetSpecies['evolution_chain_id']))
-					.then((chainSpecices) => {
-						return chainSpecices
+					.then((chainSpecies) => {
+						return chainSpecies.map((species) => {
+							const { 
+								id, identifier, predecessorid,
+								chainId, isbaby, formsswitchable
+							} = species;
+							return {
+								id,
+								identifier,
+								predecessorid,
+								chainId, 
+								isbaby: isbaby == 1,
+								formsswitchable: formsswitchable == 1 
+							}			
+						})
 					})
 					.catch((err) => { return err; })
 			})
