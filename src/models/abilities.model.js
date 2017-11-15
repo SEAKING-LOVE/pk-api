@@ -72,7 +72,7 @@ const Model = {
 		const queryString = squel.select()
 			.from(tables.pkAbilities)
 			.field(`${tables.pkAbilities}.pokemon_id`, 'pokemonId')
-			.field(`${tables.pkAbilities}.is_hidden`, 'isHidden')
+			.field(`${tables.pkAbilities}.is_hidden`, 'hidden')
 			.field(`${tables.abilities}.identifier`, 'abilityName')
 			.join(tables.abilities, null, `${tables.pkAbilities}.ability_id = ${tables.abilities}.id`)
 			.where(`${tables.pkAbilities}.ability_id = ${id}`)
@@ -83,7 +83,7 @@ const Model = {
 				return pokemon.map((ability) => {
 					return {
 						pokemonId: parseInt(ability.pokemonid),
-						isHidden: ability.isHidden == 1, 
+						hidden: ability.hidden == 1, 
 						abilityName: ability.abilityname
 					};
 				})
