@@ -16,7 +16,14 @@ const Model = {
 			.field(`${tables.types}.identifier`)
 			.toString();
 		return query(queryString)
-			.then((data) => { return data; })
+			.then((types) => {
+				return types.map((type) => {
+					return {
+						id: parseInt(type.id),
+						identifier: type.identifier
+					}
+				});
+			})
 			.catch((err) => { return err; });
 	},
 	id: (id) => {
@@ -27,7 +34,12 @@ const Model = {
 			.where(`${tables.types}.id = ${id}`)
 			.toString();
 		return query(queryString)
-			.then((data) => { return data; })
+			.then((type) => {
+				return {
+					id: parseInt(type.id),
+					identifier: type.identifier
+				}
+			})
 			.catch((err) => { return err; });
 	},
 	effectAll: () => {
@@ -52,9 +64,18 @@ const Model = {
 			.join(effectivenessSubquery, "effectiveness", `types.id = effectiveness.damage_type_id`)
 			.join(typeNameRejoin, "typeNameRejoin", `effectiveness.target_type_id = typeNameRejoin.id`)
 			.toString();
-		console.log(queryString);
 		return query(queryString)
-			.then((data) => { return data; })
+			.then((types) => {
+				return types.map((type) => {
+					return {
+						damageId: parseInt(type.damageid),
+						damageType: type.damagetype,
+						targetId: parseInt(type.targetid),
+						targetType: type.targettype,
+						damageFactor: parseInt(type.damagefactor)
+					}
+				});
+			})
 			.catch((err) => { return err; });
 	},
 	pokemon: (id) => {
@@ -69,7 +90,16 @@ const Model = {
 			.where(`${tables.pkTypes}.type_id = ${id}`)
 			.toString();
 		return query(queryString)
-			.then((data) => { return data; })
+			.then((types) => {
+				return types.map((type) => {
+					return {
+						pokemonId: parseInt(type.pokemonid),
+						typeId: parseInt(type.typeid),
+						pokemon: type.pokemon,
+						type: type.type
+					}
+				});
+			})
 			.catch((err) => { return err; });
 	},
 	effectDamageId: (id) => {
@@ -96,7 +126,17 @@ const Model = {
 			.where(`effectiveness.damage_type_id = ${id}`)
 			.toString();
 		return query(queryString)
-			.then((data) => { return data; })
+			.then((types) => {
+				return types.map((type) => {
+					return {
+						damageId: parseInt(type.damageid),
+						damageType: type.damagetype,
+						targetId: parseInt(type.targetid),
+						targetType: type.targettype,
+						damageFactor: parseInt(type.damagefactor)
+					}
+				});
+			})
 			.catch((err) => { return err; });
 	},
 	effectTargetId: (id) => {
@@ -123,7 +163,17 @@ const Model = {
 			.where(`effectiveness.target_type_id = ${id}`)
 			.toString();
 		return query(queryString)
-			.then((data) => { return data; })
+			.then((types) => {
+				return types.map((type) => {
+					return {
+						damageId: parseInt(type.damageid),
+						damageType: type.damagetype,
+						targetId: parseInt(type.targetid),
+						targetType: type.targettype,
+						damageFactor: parseInt(type.damagefactor)
+					}
+				});
+			})
 			.catch((err) => { return err; });
 	}
 };
