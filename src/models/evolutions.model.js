@@ -31,6 +31,7 @@ const Model = {
 			.then((targetSpecies) => {
 				return query(pokemonSpeciesQuery(targetSpecies['evolution_chain_id']))
 					.then((chainSpecies) => {
+						if(!Array.isArray(chainSpecies)) return [chainSpecies];
 						return chainSpecies.map((species) => {
 							const { 
 								id, identifier, predecessorid,
