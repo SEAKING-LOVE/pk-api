@@ -13,14 +13,14 @@ const Model = {
 		const queryString = squel.select()
 			.from(tables.types)
 			.field(`${tables.types}.id`)
-			.field(`${tables.types}.identifier`)
+			.field(`${tables.types}.identifier`, 'name')
 			.toString();
 		return query(queryString)
 			.then((types) => {
 				return types.map((type) => {
 					return {
 						id: parseInt(type.id),
-						identifier: type.identifier
+						name: type.name
 					}
 				});
 			})
@@ -30,14 +30,14 @@ const Model = {
 		const queryString = squel.select()
 			.from(tables.types)
 			.field(`${tables.types}.id`)
-			.field(`${tables.types}.identifier`)
+			.field(`${tables.types}.identifier`, 'name')
 			.where(`${tables.types}.id = ${id}`)
 			.toString();
 		return query(queryString)
 			.then((type) => {
 				return {
 					id: parseInt(type.id),
-					identifier: type.identifier
+					name: type.name
 				}
 			})
 			.catch((err) => { return err; });
