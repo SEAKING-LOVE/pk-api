@@ -19,39 +19,65 @@ const Model = {
 		const queryString = squel.select()
 			.from(tables.pk)
 			.field('id')
-			.field('identifier')
+			.field('identifier', 'name')
 			.field('height')
 			.field('weight')
 			.field('base_experience', 'baseExperience')
 			.toString();
 		return query(queryString)
 			.then((data) => { return data; })
+			.then((pks) => {
+				return pks.map((pk) => {
+					return {
+						id: parseInt(pk.id),
+						name: pk.name,
+						height: parseInt(pk.height),
+						weight: parseInt(pk.weight),
+						baseExperience: parseInt(pk.baseExperience)
+					}
+				})
+			})
 			.catch((err) => { return err; });
 	},
 	general: (id) => {
 		const queryString = squel.select()
 			.from(tables.pk)
 			.field('id')
-			.field('identifier')
+			.field('identifier', 'name')
 			.field('height')
 			.field('weight')
 			.field('base_experience', 'baseExperience')
 			.where(`${tables.pk}.id = ${id}`)
 			.toString();
 		return query(queryString)
-			.then((data) => { return data; })
+			.then((pk) => {
+				return {
+					id: parseInt(pk.id),
+					name: pk.name,
+					height: parseInt(pk.height),
+					weight: parseInt(pk.weight),
+					baseExperience: parseInt(pk.baseexperience)
+				}
+			})
 			.catch((err) => { return err; });
 	},
 	types: (id) => {
 		const queryString = squel.select()
 			.from(tables.pkTypes)
 			.field(`${tables.pkTypes}.type_id`, 'id')
-			.field(`${tables.types}.identifier`)
+			.field(`${tables.types}.identifier`, 'name')
 			.join(tables.types, null, `${tables.pkTypes}.type_id = ${tables.types}.id`)
 			.where(`${tables.pkTypes}.pokemon_id = ${id}`)
 			.toString();
 		return query(queryString)
-			.then((data) => { return data; })
+			.then((types) => {
+				if(!Array.isArray(types)) types = [types];
+				return types.map((type) => {
+					return {
+						id: parseInt(type.id),
+						name: type.name					}
+				})
+			})
 			.catch((err) => { return err; });
 	},
 	abilities: (id) => {
@@ -59,20 +85,20 @@ const Model = {
 			.from(tables.pkAbilities)
 			.field(`${tables.pkAbilities}.ability_id`, 'id')
 			.field(`${tables.pkAbilities}.is_hidden`, 'hidden')
-			.field(`${tables.abilities}.identifier`)
+			.field(`${tables.abilities}.identifier`, 'name')
 			.join(tables.abilities, null, `${tables.pkAbilities}.ability_id = ${tables.abilities}.id`)
 			.where(`${tables.pkAbilities}.pokemon_id = ${id}`)
 			.toString();
 		return query(queryString)
-			.then((data) => { 
-				return data.map((ability) => {
-					const { id, hidden, identifier } = ability;
+			.then((abilities) => { 
+				if(!Array.isArray(abilities)) abilities = [abilities];
+				return abilities.map((ability) => {
 					return {
-						id,
-						identifier,
-						hidden: hidden == 1
+						id: parseInt(ability.id),
+						name: ability.name,
+						hidden: ability.hidden == 1
 					}
-				})
+				});
 			})
 			.catch((err) => { return err; });	
 	},
@@ -81,7 +107,7 @@ const Model = {
 			.from(tables.pkMoves)
 			.field(`${tables.pkMoves}.move_id`, 'id')
 			.field(`${tables.pkMoves}.level`)
-			.field(`${tables.moves}.identifier`)
+			.field(`${tables.moves}.identifier`, 'name')
 			.field(`${tables.moveMethods}.identifier`, 'method')
 			.join(tables.moves, null, `${tables.pkMoves}.move_id = ${tables.moves}.id`)
 			.join(tables.moveMethods, null, `${tables.pkMoves}.pokemon_move_method_id = ${tables.moveMethods}.id`)
@@ -91,11 +117,14 @@ const Model = {
 		return query(queryString)
 			.then((data) => {
 				let catagorized = {};
-				data.forEach((moves) => {
-					const method = moves.method;
-					const { id, level, identifier } = moves;
+				data.forEach((move) => {
+					const method = move.method;
 					if(!catagorized[method]) catagorized[method] = [];
-					catagorized[method].push({ id, level, identifier });
+					catagorized[method].push({
+						id: parseInt(move.id),
+						level: parseInt(move.level),
+						name: move.name
+					});
 				});
 				return catagorized;
 			})
@@ -113,7 +142,7 @@ const Model = {
 			.then((data) => {
 				let stats = {};
 				data.forEach((stat) => {
-					stats[stat.identifier] = stat.value;
+					stats[stat.identifier] = parseInt(stat.value);
 				})
 				return stats;
 			})
