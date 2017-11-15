@@ -21,12 +21,19 @@ const Model = {
 		const queryString = squel.select()
 			.from(tables.abilities)
 			.field(`${tables.abilities}.id`)
-			.field(`${tables.abilities}.identifier`)
+			.field(`${tables.abilities}.identifier`, 'name')
 			.join(subQuery, "subQuery", `${tables.abilities}.id = subQuery.ability_id`)
 			.order(`${tables.abilities}.identifier`)
 
 		return query(queryString)
-			.then((data) => { return data; })
+			.then((abilities) => {
+				return abilities.map((ability) => {
+					return {
+						id: parseInt(ability.id),
+						name: ability.name
+					}
+				})
+			})
 			.catch((err) => { return err; });
 	},
 	description: (id) => {
@@ -45,28 +52,42 @@ const Model = {
 		const queryString = squel.select()
 			.from(tables.abilities)
 			.field(`${tables.abilities}.id`)
-			.field(`${tables.abilities}.identifier`)
-			.field(`subQuery.flavor_text`)
+			.field(`${tables.abilities}.identifier`, 'name')
+			.field(`subQuery.flavor_text`, 'description')
 			.join(subQuery, "subQuery", `${tables.abilities}.id = subQuery.ability_id`)
 			.where(`${tables.abilities}.id = ${id}`)
 			.toString();
 		return query(queryString)
-			.then((data) => { return data; })
+			.then((ability) => {
+				return {
+					id: parseInt(ability.id),
+					name: ability.name,
+					description: ability.description
+				}
+			})
 			.catch((err) => { return err; });
 
 	},
 	pokemon: (id) => {
 		const queryString = squel.select()
 			.from(tables.pkAbilities)
-			.field(`${tables.pkAbilities}.pokemon_id`)
-			.field(`${tables.pkAbilities}.is_hidden`)
-			.field(`${tables.abilities}.identifier`)
+			.field(`${tables.pkAbilities}.pokemon_id`, 'pokemonId')
+			.field(`${tables.pkAbilities}.is_hidden`, 'isHidden')
+			.field(`${tables.abilities}.identifier`, 'abilityName')
 			.join(tables.abilities, null, `${tables.pkAbilities}.ability_id = ${tables.abilities}.id`)
 			.where(`${tables.pkAbilities}.ability_id = ${id}`)
 			.toString();
 
 		return query(queryString)
-			.then((data) => { return data; })
+			.then((pokemon) => {
+				return pokemon.map((ability) => {
+					return {
+						pokemonId: parseInt(ability.pokemonid),
+						isHidden: ability.isHidden == 1, 
+						abilityName: ability.abilityname
+					};
+				})
+			})
 			.catch((err) => { return err; });
 	}
 }
