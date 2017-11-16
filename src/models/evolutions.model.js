@@ -20,11 +20,9 @@ const Model = {
 			return squel.select()
 			.from(tables.species)
 			.field('id')
-			.field('identifier')
-			.field('evolves_from_species_id', 'predecessorId')
+			.field('identifier', 'name')
+			.field('evolves_from_species_id', 'predecessorid')
 			.field('evolution_chain_id', 'chainId')
-			.field('is_baby', 'isBaby')
-			.field('forms_switchable', 'formsSwitchable')
 			.where(`${tables.species}.evolution_chain_id = ${evoChain}`)
 		} 
 		return query(evoChainQuery)
@@ -33,17 +31,11 @@ const Model = {
 					.then((chainSpecies) => {
 						if(!Array.isArray(chainSpecies)) chainSpecies = [chainSpecies];
 						return chainSpecies.map((species) => {
-							const { 
-								id, identifier, predecessorid,
-								chainId, isbaby, formsswitchable
-							} = species;
 							return {
-								id: parseInt(id),
-								identifier,
-								predecessorid,
-								chainId, 
-								isbaby: isbaby == 1,
-								formsswitchable: formsswitchable == 1 
+								id: parseInt(species.id),
+								name: species.name,
+								predecessorId: species.predecessorid,
+								chainId: parseInt(species.chainid), 
 							}			
 						})
 					})
