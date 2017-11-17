@@ -142,6 +142,8 @@ const Model = {
 			.then((data) => {
 				let stats = {};
 				data.forEach((stat) => {
+					if(stat.identifier == 'special-attack') stat.identifier = 'specialAttack';
+					if(stat.identifier == 'special-defense') stat.identifier = 'specialDefense';
 					stats[stat.identifier] = parseInt(stat.value);
 				})
 				return stats;
