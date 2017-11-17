@@ -2,7 +2,6 @@ const express = require('express');
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-
 //CORS: allow web requests from any domain
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -10,7 +9,7 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.get('/', (req, res) => res.send('api root'));
+app.get('/', (req, res) => res.send('welcome to pk-api ;)'));
 
 const API_PATH = '/v1/';
 const PokemonRouter = require('./routes/pokemon.router.js');
