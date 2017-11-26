@@ -22,7 +22,7 @@ const Model = {
 			.field('identifier', 'name')
 			.field('height')
 			.field('weight')
-			.field('base_experience', 'baseExperience')
+			.field('base_experience', 'baseexperience')
 			.toString();
 		return query(queryString)
 			.then((data) => { return data; })
@@ -35,7 +35,7 @@ const Model = {
 						name: pk.name,
 						height: parseFloat(height),
 						weight: parseFloat(weight),
-						baseExperience: parseInt(pk.baseExperience)
+						baseExperience: parseInt(pk.baseexperience)
 					}
 				})
 			})
@@ -48,7 +48,7 @@ const Model = {
 			.field('identifier', 'name')
 			.field('height')
 			.field('weight')
-			.field('base_experience', 'baseExperience')
+			.field('base_experience', 'baseexperience')
 			.where(`${tables.pk}.id = ${id}`)
 			.toString();
 		return query(queryString)
