@@ -28,11 +28,13 @@ const Model = {
 			.then((data) => { return data; })
 			.then((pks) => {
 				return pks.map((pk) => {
+					const height = (pk.height / 10).toFixed(1);
+					const weight = (pk.weight / 10).toFixed(1);
 					return {
 						id: parseInt(pk.id),
 						name: pk.name,
-						height: parseFloat(pk.height),
-						weight: parseFloat(pk.weight),
+						height: parseFloat(height),
+						weight: parseFloat(weight),
 						baseExperience: parseInt(pk.baseExperience)
 					}
 				})
@@ -51,11 +53,13 @@ const Model = {
 			.toString();
 		return query(queryString)
 			.then((pk) => {
+				const height = (pk.height / 10).toFixed(1);
+				const weight = (pk.weight / 10).toFixed(1);
 				return {
 					id: parseInt(pk.id),
 					name: pk.name,
-					height: parseFloat(pk.height),
-					weight: parseFloat(pk.weight),
+					height: parseFloat(height),
+					weight: parseFloat(weight),
 					baseExperience: parseInt(pk.baseexperience)
 				}
 			})
