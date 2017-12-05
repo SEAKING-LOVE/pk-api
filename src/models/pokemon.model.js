@@ -41,7 +41,7 @@ const Model = {
 			})
 			.catch((err) => { return err; });
 	},
-	general: (id) => {
+		general: (id) => {
 		const queryString = squel.select()
 			.from(tables.pk)
 			.field('id')
@@ -55,12 +55,21 @@ const Model = {
 			.then((pk) => {
 				const height = (pk.height / 10).toFixed(1);
 				const weight = (pk.weight / 10).toFixed(1);
+				const pokemonId = parseInt(pk.id);
+				const artwork = `https://raw.githubusercontent.com/SEAKING-LOVE/pk-assets/master/pokemon/artwork/${pokemonId}.png`;
+				const sprite = `https://raw.githubusercontent.com/SEAKING-LOVE/pk-assets/master/pokemon/sprites/${pokemonId}.png`;
+				const cry = `https://raw.githubusercontent.com/SEAKING-LOVE/pk-assets/master/pokemon/cries/${pokemonId}.mp3`;
+				const footprint = pokemonId <= 649 ? `https://raw.githubusercontent.com/SEAKING-LOVE/pk-assets/master/pokemon/footprint/${pokemonId}.png` : null;
 				return {
-					id: parseInt(pk.id),
+					id: pokemonId,
 					name: pk.name,
 					height: parseFloat(height),
 					weight: parseFloat(weight),
-					baseExperience: parseInt(pk.baseexperience)
+					baseExperience: parseInt(pk.baseexperience),
+					artwork: artwork,
+					sprite: sprite,
+					cry: cry,
+					footprint: footprint,
 				}
 			})
 			.catch((err) => { return err; });
