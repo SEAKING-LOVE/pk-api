@@ -3,7 +3,7 @@ const query = require('../pgconnect.js');
 
 const tables = {
 	evo: 'pokemon.pokemon_evolution',
-	triggers: 'pokemon.evolution_triggers',
+	triggers: 'pokemon.evolution_trigger_prose',
 	item_names: 'pokemon.item_names',
 	pk: 'pokemon.pokemon',
 	species: 'pokemon.pokemon_species'
@@ -53,7 +53,7 @@ const Model = {
 
 		const pokemonSpeciesQuery = (evoChain) => {
 			return squel.select()
-			.from(tables.species, species)
+			.from(tables.species, 'species')
 			.field(`species.id`, 'pkid')
 			.field(`species.identifier`, 'name')
 			.field(`species.evolves_from_species_id`, 'predecessorid')
@@ -84,7 +84,7 @@ const Model = {
 			.left_join(triggerData, "triggerData", `evolutionData.evolution_trigger_id = triggerData.evolution_trigger_id`)
 			.left_join(itemData, "itemTriggerData", `evolutionData.trigger_item_id = itemTriggerData.item_id`)
 			.left_join(itemData, "itemHeldData", `evolutionData.held_item_id = itemHeldData.item_id`)
-			.where(`${tables.species}.evolution_chain_id = ${evoChain}`)
+			.where(`species.evolution_chain_id = ${evoChain}`)
 		} 
 		return query(evoChainQuery)
 			.then((targetSpecies) => {
@@ -102,6 +102,9 @@ const Model = {
 								triggerMethod: species.trigger_method,
 								triggerItem: species.trigger_item,
 								heldItem: species.held_item,
+								minimum_happiness: species.minimum_happiness,
+								minimum_beauty: species.minimum_beauty,
+								minimum_affection: species.minimum_affection,
 							}			
 						})
 					})
