@@ -11,7 +11,8 @@ const tables = {
 	moves: 'pokemon.moves',
 	moveMethods: 'pokemon.pokemon_move_methods',
 	pkStats: 'pokemon.pokemon_stats',
-	stats: 'pokemon.stats'
+	stats: 'pokemon.stats',
+	species: 'pokemon.pokemon_species',
 };
 
 const Model = {
@@ -41,14 +42,17 @@ const Model = {
 			})
 			.catch((err) => { return err; });
 	},
-		general: (id) => {
+	general: (id) => {
 		const queryString = squel.select()
 			.from(tables.pk)
-			.field('id')
-			.field('identifier', 'name')
-			.field('height')
-			.field('weight')
-			.field('base_experience', 'baseexperience')
+			.field(`${tables.pk}.id`)
+			.field(`${tables.pk}.identifier`, 'name')
+			.field(`${tables.pk}.height`)
+			.field(`${tables.pk}.weight`)
+			.field(`${tables.pk}.base_experience`, 'baseExperience')
+			.field(`${tables.species}.base_happiness`, 'baseHappiness')
+			.field(`${tables.species}.capture_rate`, 'captureRate')
+			.join(tables.species, null, `${tables.pk}.id = ${tables.species}.id`)
 			.where(`${tables.pk}.id = ${id}`)
 			.toString();
 		return query(queryString)
@@ -65,7 +69,9 @@ const Model = {
 					name: pk.name,
 					height: parseFloat(height),
 					weight: parseFloat(weight),
-					baseExperience: parseInt(pk.baseexperience),
+					baseExperience: parseInt(pk.baseExperience),
+					baseHappiness: parseInt(pk.baseHappiness),
+					captureRate: parseInt(pk.captureRate),
 					artwork: artwork,
 					sprite: sprite,
 					cry: cry,
@@ -88,7 +94,8 @@ const Model = {
 				return types.map((type) => {
 					return {
 						id: parseInt(type.id),
-						name: type.name					}
+						name: type.name
+					}
 				})
 			})
 			.catch((err) => { return err; });
