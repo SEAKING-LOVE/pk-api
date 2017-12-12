@@ -1,5 +1,6 @@
 const squel = require('squel');
 const query = require('../pgconnect.js');
+const assets = require('../assets.js');
 
 const tables = {
 	pk: 'pokemon.pokemon',
@@ -60,10 +61,11 @@ const Model = {
 				const height = (pk.height / 10).toFixed(1);
 				const weight = (pk.weight / 10).toFixed(1);
 				const pokemonId = parseInt(pk.id);
-				const artwork = `https://raw.githubusercontent.com/SEAKING-LOVE/pk-assets/master/pokemon/artwork/${pokemonId}.png`;
-				const sprite = `https://raw.githubusercontent.com/SEAKING-LOVE/pk-assets/master/pokemon/sprites/${pokemonId}.png`;
-				const cry = `https://raw.githubusercontent.com/SEAKING-LOVE/pk-assets/master/pokemon/cries/${pokemonId}.mp3`;
-				const footprint = pokemonId <= 649 ? `https://raw.githubusercontent.com/SEAKING-LOVE/pk-assets/master/pokemon/footprint/${pokemonId}.png` : null;
+				
+				const artwork = assets.artwork(pokemonId);
+				const sprite = assets.sprite(pokemonId);
+				const cry = assets.cry(pokemonId);
+				const footprint = assets.footprint(pokemonId);
 				return {
 					id: pokemonId,
 					name: pk.name,
