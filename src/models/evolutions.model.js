@@ -96,10 +96,10 @@ const format = {
 			if(newChainIndex == -1) { // add curr to newChain if doesn't already exist
 				newChain.push(currMember);
 			} else { // merge curr with corresponding newChain member
-
 				newChain[newChainIndex] = format.mergeMembers(newChain[newChainIndex], currMember);
 			}
 		}
+		newChain = format.filterNulls(newChain);
 		return newChain;
 
 	},
@@ -110,12 +110,23 @@ const format = {
 			const isFieldArray = Array.isArray(m1[key]);
 
 			if(isFieldArray) {
-				newMember[key] = m1[key].concat(m2[key]);
+				const isNewValue = m1[key].indexOf(m2[key][0]) !== -1;
+				newMember[key] = isNewValue ? m1[key] : m1[key].concat(m2[key]);
 			} else {
 				newMember[key] = m1[key];
 			}
 		}
 		return newMember;
+	},
+	filterNulls: (chain) => {
+		return chain.map((member) => {
+			for(key in member) {
+				if(Array.isArray(member[key])) {
+					member[key] = member[key].filter((val) => val !== null)
+				}
+			}
+			return member;
+		});
 	},
 	chainMember: (member) => {
 		return {
