@@ -86,30 +86,61 @@ const queryHelper = {
 }
 
 const format = {
-	chainMember: (species) => {
+	chain: (chain) => {
+		let newChain = [];
+		for(let i = 0; i < chain.length; i ++) {
+			const currMember = format.chainMember(chain[i]);
+			const newChainIndex = newChain.findIndex((member) => { //find index of curr in newChain
+				return member.id == currMember.id; 
+			});
+			if(newChainIndex == -1) { // add curr to newChain if doesn't already exist
+				newChain.push(currMember);
+			} else { // merge curr with corresponding newChain member
+
+				newChain[newChainIndex] = format.mergeMembers(newChain[newChainIndex], currMember);
+			}
+		}
+		return newChain;
+
+	},
+	mergeMembers: (m1, m2) => {
+		let newMember = {};
+		
+		for(key in m1) {
+			const isFieldArray = Array.isArray(m1[key]);
+
+			if(isFieldArray) {
+				newMember[key] = m1[key].concat(m2[key]);
+			} else {
+				newMember[key] = m1[key];
+			}
+		}
+		return newMember;
+	},
+	chainMember: (member) => {
 		return {
-			id: parseInt(species.pkid),
-			name: species.name,
-			predecessorId: species.predecessorid,
-			chainId: parseInt(species.chainid), 
+			id: parseInt(member.pkid),
+			name: member.name,
+			predecessorId: member.predecessorid,
+			chainId: parseInt(member.chainid), 
 			// Todo, fill in the other evolution method information
-			minimumLevel: species.minimum_level,
-			triggerMethod: species.trigger_method,
-			triggerItem: species.trigger_item,
-			heldItem: species.held_item,
-			minimum_happiness: species.minimum_happiness,
-			minimum_beauty: species.minimum_beauty,
-			minimum_affection: species.minimum_affection,
-			gender_id: species.gender_id,
-			location_name: species.location_name,
-			time_of_day: species.time_of_day,
-			known_move_id: species.known_move_id,
-			known_move_type_id: species.known_move_type_id,
-			relative_physical_stats: species.relative_physical_stats,
-			party_species_id: species.party_species_id,
-			trade_species_id: species.trade_species_id,
-			needs_overworld_rain: species.needs_overworld_rain,
-			turn_upside_down: species.turn_upside_down,
+			minimumLevel: [member.minimum_level],
+			triggerMethod: [member.trigger_method],
+			triggerItem: [member.trigger_item],
+			heldItem: [member.held_item],
+			minimumHappiness: [member.minimum_happiness],
+			minimumBeauty: [member.minimum_beauty],
+			minimumAffection: [member.minimum_affection],
+			genderId: [member.gender_id],
+			locationName: [member.location_name],
+			timeOfDay: [member.time_of_day],
+			knownMoveId: [member.known_move_id],
+			knownMoveTypeId: [member.known_move_type_id],
+			relativePhysicalStats: [member.relative_physical_stats],
+			partySpeciesId: [member.party_species_id],
+			tradeSpeciesId: [member.trade_species_id],
+			needsOverworldRain: [member.needs_overworld_rain],
+			turnUpsideDown: [member.turn_upside_down],
 		}			
 	}
 }
@@ -125,10 +156,7 @@ const Model = {
 			.then((targetSpecies) => {
 				const evoChainId = targetSpecies['evolution_chain_id'];
 				return query(queryHelper.chainDataQuery(evoChainId))
-					.then((chainSpecies) => {
-						if(!Array.isArray(chainSpecies)) chainSpecies = [chainSpecies];
-						 return chainSpecies.map((species) =>  format.chainMember(species))
-					})
+					.then((chain) => format.chain(chain))
 					.catch((err) => { return err; })
 			})
 			.catch((err) => { return err; });
