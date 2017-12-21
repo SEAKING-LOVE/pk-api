@@ -32,12 +32,20 @@ const Model = {
 				return pks.map((pk) => {
 					const height = (pk.height / 10).toFixed(1);
 					const weight = (pk.weight / 10).toFixed(1);
+					const artwork = assets.artwork(pk.id);
+					const sprite = assets.sprite(pk.id);
+					const cry = assets.cry(pk.id);
+					const footprint = assets.footprint(pk.id);
 					return {
 						id: parseInt(pk.id),
 						name: pk.name,
 						height: parseFloat(height),
 						weight: parseFloat(weight),
-						baseExperience: parseInt(pk.baseexperience)
+						baseExperience: parseInt(pk.baseexperience),
+						artwork,
+						sprite,
+						cry,
+						footprint
 					}
 				})
 			})
