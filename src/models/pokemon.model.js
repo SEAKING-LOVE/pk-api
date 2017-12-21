@@ -16,6 +16,8 @@ const tables = {
 	species: 'pokemon.pokemon_species',
 };
 
+const totalPk = 802;
+
 const Model = {
 	all: () => {
 		const queryString = squel.select()
@@ -25,6 +27,7 @@ const Model = {
 			.field('height')
 			.field('weight')
 			.field('base_experience', 'baseexperience')
+			.where(`id <= ${totalPk}`) // to exclude forms
 			.toString();
 		return query(queryString)
 			.then((data) => { return data; })
