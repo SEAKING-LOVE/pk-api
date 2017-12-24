@@ -8,6 +8,7 @@ const tables = {
 	movesDesc: 'pokemon.move_flavor_text',
 	types: 'pokemon.types',
 	pkMoves: 'pokemon.pokemon_moves',
+	damage_class_id: 'pokemon.move_damage_class_prose'
 };
 
 const Model = {
@@ -24,6 +25,7 @@ const Model = {
 			.join(tables.types, null, `${tables.types}.id = ${tables.moves}.type_id`)
 			.order(`${tables.moves}.identifier`)
 			.toString();
+			
 		return query(queryString)
 			.then((moves) => {
 				return moves.map((move) => {
@@ -52,11 +54,15 @@ const Model = {
 			.field(`${tables.movesDesc}.flavor_text`, 'description')
 			.field(`${tables.types}.id`, 'typeId')
 			.field(`${tables.types}.identifier`, 'typeName')
+			.field(`${tables.moves}.damage_class_id`, 'damage_class_id')
+			.field(`${tables.damage_class_id}.name`, 'damage_class_name')
 			.join(tables.types, null, `${tables.types}.id = ${tables.moves}.type_id`)
 			.join(tables.movesDesc, null, `${tables.movesDesc}.move_id = ${tables.moves}.id`)
+			.join(tables.damage_class_id, null, `${tables.damage_class_id}.move_damage_class_id = ${tables.moves}.damage_class_id AND ${tables.damage_class_id}.local_language_id = 9`)
 			.where(`${tables.moves}.id = ${id}`)
 			.where(`${tables.movesDesc}.language_id = 9`)
 			.toString();
+
 		return query(queryString)
 			.then((moves) => {
 				return moves.map((move) => {
@@ -68,7 +74,9 @@ const Model = {
 						accuracy: parseInt(move.accuracy),
 						description: move.description,
 						typeId: parseInt(move.typeId),
-						typeName: move.typeName
+						typeName: move.typeName,
+						damageTypeId: parseInt(move.damage_class_id),
+						damageTypeName: move.damage_class_name
 					}
 				});
 			})

@@ -7,7 +7,10 @@ const tables = {
 	location_names: 'pokemon.location_area_prose',
 	item_names: 'pokemon.item_names',
 	pk: 'pokemon.pokemon',
-	species: 'pokemon.pokemon_species'
+	species: 'pokemon.pokemon_species',
+	genders: 'pokemon.genders',
+	moves: 'pokemon.moves',
+	types: 'pokemon.types'
 };
 
 const queryHelper = {
@@ -38,13 +41,25 @@ const queryHelper = {
 		.field(`evolutionData.turn_upside_down`)
 		.field(`triggerData.name`, 'trigger_method')
 		.field(`locationData.name`, 'location_name')
+		.field(`genderData.identifier`, 'gender')
+		.field(`moveData.identifier`, 'known_move')
+		.field(`moveTypeData.identifier`, 'known_move_type')
+		.field(`partySpeciesData.identifier`, 'party_species_name')
+		.field(`partyTypeData.identifier`, 'party_type_name')
+		.field(`tradeSpeciesData.identifier`, 'trade_species_name')
 		.field(`itemTriggerData.name`, 'trigger_item')
 		.field(`itemHeldData.name`, 'held_item')
 		.left_join(queryHelper.evolutionData, "evolutionData", `species.id = evolutionData.evolved_species_id`)
 		.left_join(queryHelper.triggerData, "triggerData", `evolutionData.evolution_trigger_id = triggerData.evolution_trigger_id`)
 		.left_join(queryHelper.locationData, "locationData", `evolutionData.location_id = locationData.location_area_id`)
+		.left_join(queryHelper.genderData, "genderData", `genderData.id = evolutionData.gender_id`)
+		.left_join(queryHelper.moveData, "moveData", `moveData.id = evolutionData.known_move_id`)
+		.left_join(queryHelper.typeData, "moveTypeData", `moveTypeData.id = evolutionData.known_move_type_id`)
+		.left_join(queryHelper.typeData, "partyTypeData", `partyTypeData.id = evolutionData.party_type_id`)
 		.left_join(queryHelper.itemData, "itemTriggerData", `evolutionData.trigger_item_id = itemTriggerData.item_id`)
 		.left_join(queryHelper.itemData, "itemHeldData", `evolutionData.held_item_id = itemHeldData.item_id`)
+		.left_join(queryHelper.speciesRejoinData, "partySpeciesData", `partySpeciesData.id = evolutionData.party_species_id`)
+		.left_join(queryHelper.speciesRejoinData, "tradeSpeciesData", `tradeSpeciesData.id = evolutionData.trade_species_id`)
 		.where(`species.evolution_chain_id = ${evoChainId}`)
 	},
 	evolutionData:  squel.select()
@@ -83,6 +98,22 @@ const queryHelper = {
 		.field(`${tables.location_names}.location_area_id`)
 		.field(`${tables.location_names}.name`)
 		.where(`${tables.location_names}.local_language_id = 9`),
+	genderData: squel.select()
+		.from(tables.genders)
+		.field(`${tables.genders}.id`)
+		.field(`${tables.genders}.identifier`),
+	moveData: squel.select()
+		.from(tables.moves)
+		.field(`${tables.moves}.id`)
+		.field(`${tables.moves}.identifier`),
+	typeData: squel.select()
+		.from(tables.types)
+		.field(`${tables.types}.id`)
+		.field(`${tables.types}.identifier`),
+	speciesRejoinData: squel.select()
+		.from(tables.species)
+		.field(`${tables.species}.id`)
+		.field(`${tables.species}.identifier`)
 }
 
 const format = {
@@ -129,29 +160,44 @@ const format = {
 		});
 	},
 	chainMember: (member) => {
+		let relative_physical_stat_desc = null;
+		if (member.relative_physical_stats === -1) {
+			relative_physical_stat_desc = "Attack < Defense";
+		} else if (relative_physical_stat_desc === 0 ){
+			relative_physical_stat_desc = "Attack = Defense";
+		} else if (member.relative_physical_stats === 1) {
+			relative_physical_stat_desc = "Attack > Defense";
+		} 
+
 		return {
 			id: parseInt(member.pkid),
 			name: member.name,
 			predecessorId: member.predecessorid,
 			chainId: parseInt(member.chainid), 
-			// Todo, fill in the other evolution method information
-			minimumLevel: [member.minimum_level],
-			triggerMethod: [member.trigger_method],
-			triggerItem: [member.trigger_item],
-			heldItem: [member.held_item],
-			minimumHappiness: [member.minimum_happiness],
-			minimumBeauty: [member.minimum_beauty],
-			minimumAffection: [member.minimum_affection],
-			genderId: [member.gender_id],
-			locationName: [member.location_name],
-			timeOfDay: [member.time_of_day],
-			knownMoveId: [member.known_move_id],
-			knownMoveTypeId: [member.known_move_type_id],
-			relativePhysicalStats: [member.relative_physical_stats],
-			partySpeciesId: [member.party_species_id],
-			tradeSpeciesId: [member.trade_species_id],
-			needsOverworldRain: [member.needs_overworld_rain],
-			turnUpsideDown: [member.turn_upside_down],
+			minimum_level: [member.minimum_level],
+			trigger_method: [member.trigger_method],
+			trigger_item: [member.trigger_item],
+			held_item: [member.held_item],
+			minimum_happiness: [member.minimum_happiness],
+			minimum_beauty: [member.minimum_beauty],
+			minimum_affection: [member.minimum_affection],
+			gender_id: [member.gender_id],
+			gender: [member.gender],
+			location_name: [member.location_name],
+			time_of_day: [member.time_of_day],
+			known_move_id: [member.known_move_id],
+			known_move: [member.known_move],
+			known_move_type_id: [member.known_move_type_id],
+			known_move_type: [member.known_move_type],
+			relative_physical_stats: [relative_physical_stat_desc],
+			party_species_id: [member.party_species_id],
+			party_species_name: [member.party_species_name],
+			party_type_id: [member.party_type_id],
+			party_type_name: [member.party_type_name],
+			trade_species_id: [member.trade_species_id],
+			trade_species_name: [member.trade_species_name],
+			needs_overworld_rain: [member.needs_overworld_rain === "0" ? false : true],
+			turn_upside_down: [member.turn_upside_down === "0" ? false : true],
 		}			
 	}
 }
