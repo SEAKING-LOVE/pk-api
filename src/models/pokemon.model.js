@@ -1,4 +1,4 @@
-const squel = require('squel');
+const squel = require('squel').useFlavour('postgres');
 const query = require('../pgconnect.js');
 const assets = require('../assets.js');
 
@@ -14,6 +14,7 @@ const tables = {
 	pkStats: 'pokemon.pokemon_stats',
 	stats: 'pokemon.stats',
 	species: 'pokemon.pokemon_species',
+	damage_class_id: 'pokemon.move_damage_class_prose'
 };
 
 const totalPk = 802;
@@ -141,10 +142,20 @@ const Model = {
 			.field(`${tables.pkMoves}.move_id`, 'id')
 			.field(`${tables.pkMoves}.level`)
 			.field(`${tables.moves}.identifier`, 'name')
+			.field(`${tables.moves}.power`, 'power')
+			.field(`${tables.moves}.pp`, 'pp')
+			.field(`${tables.moves}.accuracy`, 'accuracy')
+			.field(`${tables.moves}.type_id`, 'type_id')
+			.field(`${tables.moves}.damage_class_id`, 'damage_class_id')
 			.field(`${tables.moveMethods}.identifier`, 'method')
+			.field(`${tables.types}.identifier`, 'type_name')
+			.field(`${tables.damage_class_id}.name`, 'damage_class_name')
 			.join(tables.moves, null, `${tables.pkMoves}.move_id = ${tables.moves}.id`)
 			.join(tables.moveMethods, null, `${tables.pkMoves}.pokemon_move_method_id = ${tables.moveMethods}.id`)
+			.join(tables.types, null, `${tables.types}.id = ${tables.moves}.type_id`)
+			.join(tables.damage_class_id, null, `${tables.damage_class_id}.move_damage_class_id = ${tables.moves}.damage_class_id AND ${tables.damage_class_id}.local_language_id = 9`)
 			.where(`${tables.pkMoves}.pokemon_id = ${id}`)
+			.where(`${tables.pkMoves}.version_group_id = 17`)
 			.toString()
 
 		return query(queryString)
@@ -156,8 +167,24 @@ const Model = {
 					catagorized[method].push({
 						id: parseInt(move.id),
 						level: parseInt(move.level),
-						name: move.name
+						name: (move.name).replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
+						type: (move.type_name).replace(/\b\w/g, l => l.toUpperCase()),
+						class: (move.damage_class_name).replace(/\b\w/g, l => l.toUpperCase()),
+						power: move.power ? parseInt(move.power) : "-",
+						pp: parseInt(move.pp),
+						accuracy: move.accuracy ? parseInt(move.accuracy) : "-"
 					});
+				});
+				Object.keys(catagorized).forEach(key => {
+					if (key === 'level-up') {
+						catagorized[key].sort( (a, b) => {
+						    return a.level - b.level;
+						});
+					} else {
+						catagorized[key].sort( (a, b) => {
+						    return a.id - b.id;
+						});
+					}
 				});
 				return catagorized;
 			})
