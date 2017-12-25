@@ -62,30 +62,32 @@ const Model = {
 			.field(`${tables.pk}.identifier`, 'name')
 			.field(`${tables.pk}.height`)
 			.field(`${tables.pk}.weight`)
-			.field(`${tables.pk}.base_experience`, 'baseExperience')
-			.field(`${tables.species}.base_happiness`, 'baseHappiness')
-			.field(`${tables.species}.capture_rate`, 'captureRate')
+			.field(`${tables.pk}.base_experience`, 'base_experience')
+			.field(`${tables.species}.base_happiness`, 'base_happiness')
+			.field(`${tables.species}.capture_rate`, 'capture_rate')
 			.join(tables.species, null, `${tables.pk}.id = ${tables.species}.id`)
 			.where(`${tables.pk}.id = ${id}`)
 			.toString();
+
 		return query(queryString)
 			.then((pk) => {
 				const height = (pk.height / 10).toFixed(1);
 				const weight = (pk.weight / 10).toFixed(1);
 				const pokemonId = parseInt(pk.id);
-				
+
 				const artwork = assets.artwork(pokemonId);
 				const sprite = assets.sprite(pokemonId);
 				const cry = assets.cry(pokemonId);
 				const footprint = assets.footprint(pokemonId);
+				
 				return {
 					id: pokemonId,
 					name: pk.name,
 					height: parseFloat(height),
 					weight: parseFloat(weight),
-					baseExperience: parseInt(pk.baseExperience),
-					baseHappiness: parseInt(pk.baseHappiness),
-					captureRate: parseInt(pk.captureRate),
+					baseExperience: parseInt(pk.base_experience),
+					baseHappiness: parseInt(pk.base_happiness),
+					captureRate: parseInt(pk.capture_rate),
 					artwork: artwork,
 					sprite: sprite,
 					cry: cry,
