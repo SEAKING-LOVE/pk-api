@@ -36,6 +36,7 @@ const Model = {
 				return pks.map((pk) => {
 					const height = (pk.height / 10).toFixed(1);
 					const weight = (pk.weight / 10).toFixed(1);
+					const animated = assets.animated(pk.id);
 					const artwork = assets.artwork(pk.id);
 					const sprite = assets.sprite(pk.id);
 					const cry = assets.cry(pk.id);
@@ -46,6 +47,7 @@ const Model = {
 						height: parseFloat(height),
 						weight: parseFloat(weight),
 						baseExperience: parseInt(pk.baseexperience),
+						animated,
 						artwork,
 						sprite,
 						cry,
@@ -75,11 +77,12 @@ const Model = {
 				const weight = (pk.weight / 10).toFixed(1);
 				const pokemonId = parseInt(pk.id);
 
+				const animated = assets.animated(pokemonId);
 				const artwork = assets.artwork(pokemonId);
 				const sprite = assets.sprite(pokemonId);
 				const cry = assets.cry(pokemonId);
 				const footprint = assets.footprint(pokemonId);
-				
+
 				return {
 					id: pokemonId,
 					name: pk.name,
@@ -88,6 +91,7 @@ const Model = {
 					baseExperience: parseInt(pk.base_experience),
 					baseHappiness: parseInt(pk.base_happiness),
 					captureRate: parseInt(pk.capture_rate),
+					animated: animated,
 					artwork: artwork,
 					sprite: sprite,
 					cry: cry,

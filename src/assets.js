@@ -1,6 +1,9 @@
 const baseUrl = 'https://raw.githubusercontent.com/SEAKING-LOVE/pk-assets/master/';
 
 const Assets = {
+	animated: (pkid) => {
+		return `${baseUrl}pokemon/animated/${pkid}.gif`;
+	},
 	artwork: (pkid) => {
 		return `${baseUrl}pokemon/artwork/${pkid}.png`;
 	},
