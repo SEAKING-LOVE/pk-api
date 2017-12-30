@@ -1,4 +1,4 @@
-const squel = require('squel');
+const squel = require('squel').useFlavour('postgres');
 const query = require('../pgconnect.js');
 
 const tables = {
@@ -8,8 +8,17 @@ const tables = {
 	movesDesc: 'pokemon.move_flavor_text',
 	types: 'pokemon.types',
 	pkMoves: 'pokemon.pokemon_moves',
-	damage_class_id: 'pokemon.move_damage_class_prose'
+	damage_class_id: 'pokemon.move_damage_class_prose',
+	move_effect: 'pokemon.move_effect_prose'
 };
+
+
+const format = {
+	processEffectDesc: (effect, chance) => {
+		return effect.replace("$effect_chance%", chance)
+					 .replace(/\[(.*?)\]/g, "");
+	}
+}
 
 const Model = {
 	all: () => {
@@ -52,33 +61,45 @@ const Model = {
 			.field(`${tables.moves}.pp`)
 			.field(`${tables.moves}.accuracy`)
 			.field(`${tables.movesDesc}.flavor_text`, 'description')
-			.field(`${tables.types}.id`, 'typeId')
-			.field(`${tables.types}.identifier`, 'typeName')
+			.field(`${tables.types}.id`, 'type_id')
+			.field(`${tables.types}.identifier`, 'type_name')
 			.field(`${tables.moves}.damage_class_id`, 'damage_class_id')
 			.field(`${tables.damage_class_id}.name`, 'damage_class_name')
+			.field(`${tables.moves}.effect_id`, 'effect_id')
+			.field(`${tables.moves}.effect_chance`, 'effect_chance')
+			.field(`${tables.move_effect}.short_effect`, 'effect_description')
 			.join(tables.types, null, `${tables.types}.id = ${tables.moves}.type_id`)
 			.join(tables.movesDesc, null, `${tables.movesDesc}.move_id = ${tables.moves}.id`)
 			.join(tables.damage_class_id, null, `${tables.damage_class_id}.move_damage_class_id = ${tables.moves}.damage_class_id AND ${tables.damage_class_id}.local_language_id = 9`)
+			.join(tables.move_effect, null, `${tables.move_effect}.move_effect_id = ${tables.moves}.effect_id AND ${tables.damage_class_id}.local_language_id = 9`)
 			.where(`${tables.moves}.id = ${id}`)
 			.where(`${tables.movesDesc}.language_id = 9`)
+			.where(`${tables.movesDesc}.version_group_id = 17`)
 			.toString();
 
 		return query(queryString)
-			.then((moves) => {
-				return moves.map((move) => {
-					return {
-						id: parseInt(move.id),
-						moveName: move.moveName,
-						power: parseInt(move.power),
-						pp: parseInt(move.pp),
-						accuracy: parseInt(move.accuracy),
-						description: move.description,
-						typeId: parseInt(move.typeId),
-						typeName: move.typeName,
-						damageTypeId: parseInt(move.damage_class_id),
-						damageTypeName: move.damage_class_name
-					}
-				});
+			.then((move) => {
+
+				const effectChanceStr = (move.effect_chance).toString() + "%";
+				let effectDescription = format.processEffectDesc(move.effect_description, effectChanceStr);
+				
+				console.log(effectDescription)
+
+				return {
+					id: parseInt(move.id),
+					moveName: move.moveName,
+					power: parseInt(move.power),
+					pp: parseInt(move.pp),
+					accuracy: parseInt(move.accuracy),
+					description: move.description,
+					typeId: parseInt(move.type_id),
+					typeName: move.type_name,
+					categoryTypeId: parseInt(move.damage_class_id),
+					categoryTypeName: move.damage_class_name,
+					effectId: parseInt(move.effect_id),
+					effectChance: move.effect_chance,
+					effectDescription: effectDescription
+				}
 			})
 			.catch((err) => { return err; });
 	},
