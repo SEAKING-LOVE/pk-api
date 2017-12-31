@@ -76,10 +76,10 @@ const Model = {
 			.where(`${tables.movesDesc}.language_id = 9`)
 			.where(`${tables.movesDesc}.version_group_id = 17`)
 			.toString();
-			
+
 		return query(queryString)
 			.then((move) => {
-					const effectChanceStr = move.effect_change ? (move.effect_chance).toString() + "%" : '';
+					const effectChanceStr = move.effect_chance ? (move.effect_chance).toString() + "%" : '';
 					const effectDescription = format.processEffectDesc(move.effect_description, effectChanceStr);
 
 					return {
