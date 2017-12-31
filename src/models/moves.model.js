@@ -34,7 +34,7 @@ const Model = {
 			.join(tables.types, null, `${tables.types}.id = ${tables.moves}.type_id`)
 			.order(`${tables.moves}.identifier`)
 			.toString();
-			
+
 		return query(queryString)
 			.then((moves) => {
 				return moves.map((move) => {
@@ -45,7 +45,7 @@ const Model = {
 						pp: parseInt(move.pp),
 						accuracy: move.accuracy,
 						typeId: parseInt(move.typeId),
-						typeName: move.typeName 
+						typeName: move.typeName
 					}
 				});
 			})
@@ -76,31 +76,28 @@ const Model = {
 			.where(`${tables.movesDesc}.language_id = 9`)
 			.where(`${tables.movesDesc}.version_group_id = 17`)
 			.toString();
-
+			
 		return query(queryString)
 			.then((move) => {
+					const effectChanceStr = move.effect_change ? (move.effect_chance).toString() + "%" : '';
+					const effectDescription = format.processEffectDesc(move.effect_description, effectChanceStr);
 
-				const effectChanceStr = (move.effect_chance).toString() + "%";
-				let effectDescription = format.processEffectDesc(move.effect_description, effectChanceStr);
-				
-				console.log(effectDescription)
-
-				return {
-					id: parseInt(move.id),
-					moveName: move.moveName,
-					power: parseInt(move.power),
-					pp: parseInt(move.pp),
-					accuracy: parseInt(move.accuracy),
-					description: move.description,
-					typeId: parseInt(move.type_id),
-					typeName: move.type_name,
-					categoryTypeId: parseInt(move.damage_class_id),
-					categoryTypeName: move.damage_class_name,
-					effectId: parseInt(move.effect_id),
-					effectChance: move.effect_chance,
-					effectDescription: effectDescription
-				}
-			})
+					return {
+						id: parseInt(move.id),
+						moveName: move.moveName,
+						power: parseInt(move.power),
+						pp: parseInt(move.pp),
+						accuracy: parseInt(move.accuracy),
+						description: move.description,
+						typeId: parseInt(move.type_id),
+						typeName: move.type_name,
+						categoryTypeId: parseInt(move.damage_class_id),
+						categoryTypeName: move.damage_class_name,
+						effectId: parseInt(move.effect_id),
+						effectChance: move.effect_chance,
+						effectDescription: effectDescription
+					}
+				})
 			.catch((err) => { return err; });
 	},
 	pokemon: (id) => {
